@@ -14,6 +14,11 @@ type RegisterUser struct {
 	Password string `json:"password"`
 }
 
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func NewUser(register RegisterUser) (User, error) {
 	hashedPassword, error := bcrypt.GenerateFromPassword([]byte(register.Password), 10)
 	

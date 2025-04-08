@@ -76,3 +76,34 @@ func (api ApiHandler) RegisterUserHandler(request events.APIGatewayProxyRequest)
 		StatusCode: http.StatusCreated,
 	}, err
 } 
+
+func (api ApiHandler) LoginUser(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	var loginRequest types.LoginRequest
+
+	error := json.Unmarshal([]byte(request.Body), &loginRequest)
+	if error != nil {
+		return events.APIGatewayProxyResponse{
+			Body: "Invalid Request",
+			StatusCode: http.StatusBadRequest,
+		}, error
+	}
+
+	exists, error := api.dbStore.GetUser(loginRequest.Username)
+	if error != nil {
+		return events.APIGatewayProxyResponse{
+			Body: "Internal Server Error",
+			StatusCode: http.StatusInternalServerError,
+		}, error
+	}
+
+	if !types.ValidatePassword(exists.HashedPassword, loginRequest.Password) {
+		return events.APIGatewayProxyResponse{
+			Body: "Invalid user credentials",
+			StatusCode: http.StatusBadRequest,
+		}, nil 
+	}
+	return events.APIGatewayProxyResponse{
+		Body: "Successfully logged in",
+		StatusCode: http.StatusOK,
+	}, nil 
+}
