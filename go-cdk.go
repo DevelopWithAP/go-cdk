@@ -42,7 +42,7 @@ func NewGoCdkStack(scope constructs.Construct, id string, props *GoCdkStackProps
 			AllowMethods: jsii.Strings("GET", "POST", "PUT", "DELETE", "OPTIONS"),
 			AllowOrigins: jsii.Strings("*"),
 		},
-		// CloudWatchRole: jsii.Bool(true),
+		CloudWatchRole: jsii.Bool(true),
 
 		DeployOptions: &awsapigateway.StageOptions{
 			LoggingLevel: awsapigateway.MethodLoggingLevel_INFO,
